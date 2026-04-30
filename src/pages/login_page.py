@@ -20,7 +20,7 @@ class LoginPage:
 
     def navigate(self, base_url: str) -> None:
         """Navigate to the login page."""
-        self.page.goto(f"{base_url}/login")
+        self.page.goto(f"{base_url}")
         self.email_input.wait_for(state="visible")
 
     def enter_email(self, email: str) -> None:
