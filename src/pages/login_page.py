@@ -2,9 +2,13 @@
 
 from playwright.sync_api import Page, expect
 
+from config.settings import settings
+
 
 class LoginPage:
     """Page Object Model for the Login Page."""
+
+    URL = settings.LOGIN_URL
 
     def __init__(self, page: Page):
         # Locators
@@ -16,11 +20,12 @@ class LoginPage:
         self.google_button = page.get_by_role("button", name="Continue with Google")
         self.facebook_button = page.get_by_role("button", name="Continue with Facebook")
         self.apple_button = page.get_by_role("button", name="Continue with Apple")
-        self.error_message = page.get_by_text("Enter a valid email.")
+        self.error_message_invalid_email = page.get_by_text("Enter a valid email.")
+        self.error_message_empty = page.get_by_text("Please enter your email address")
 
-    def navigate(self, base_url: str) -> None:
+    def navigate(self) -> None:
         """Navigate to the login page."""
-        self.page.goto(f"{base_url}")
+        self.page.goto(self.URL, wait_until="domcontentloaded")
         self.email_input.wait_for(state="visible")
 
     def enter_email(self, email: str) -> None:
@@ -39,7 +44,11 @@ class LoginPage:
 
     def assert_email_required(self) -> None:
         """Assert that an error message is shown when email is not provided."""
-        expect(self.email_input).to_be_visible()
+        expect(self.error_message_empty).to_be_visible()
+
+    def assert_invalid_email_error(self) -> None:
+        """Assert that an error message is shown when an invalid email is provided."""
+        expect(self.error_message_invalid_email).to_be_visible()
 
     def assert_oauth_buttons_visible(self) -> None:
         """Assert that the OAuth login buttons are visible on the page."""
