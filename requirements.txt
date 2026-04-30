@@ -1,0 +1,14 @@
+# Core test framework
+pytest==9.0.3
+pytest-playwright==0.7.2
+playwright==1.59.0
+pytest-html==4.2.0
+
+# Configuration management
+python-dotenv==1.0.1
+
+# Linting & formatting (dev quality gates)
+black==24.4.2
+isort==5.13.2
+flake8==7.0.0
+flake8-bugbear==24.4.26
