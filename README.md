@@ -43,3 +43,26 @@ cp .env.example .env
 ---
 
 ## Project Structure
+
+## Code Quality
+
+### Linting & formatting
+
+```bash
+black .          # format code
+isort .          # sort imports
+flake8 .         # lint
+```
+
+Config lives in `setup.cfg` (`[flake8]` and `[isort]` sections). Line length is 100 for both.
+
+### Pre-commit hooks
+
+Runs automatically on `git commit`:
+
+```bash
+pre-commit install          # only needed once
+pre-commit run --all-files  # run manually against everything
+```
+
+Hooks: black, isort, flake8 (with flake8-bugbear), trailing whitespace, YAML validation, merge-conflict detection, private-key guard

@@ -14,69 +14,50 @@ from playwright.sync_api import Page, expect
 from config.settings import settings
 from src.pages.create_account_page import CreateAccountPage
 from src.pages.forget_password_page import ForgotPasswordPage
-from src.pages.login_page import LoginPage
 from src.pages.login_password_page import LoginPasswordPage
 
 
 class TestLoginUI:
     """Test cases for validating the login UI state."""
 
-    def test_email_input_and_buttons_visible(self, page: Page) -> None:
+    def test_email_input_and_buttons_visible(self, login_page) -> None:
         """Test that the email input and all buttons are visible on the login page."""
-        login_page = LoginPage(page)
-        login_page.navigate()
         expect(login_page.email_input).to_be_visible()
         expect(login_page.continue_button).to_be_visible()
         expect(login_page.create_account_link).to_be_visible()
 
-    def test_oauth_buttons_visible(self, page: Page) -> None:
+    def test_oauth_buttons_visible(self, login_page) -> None:
         """Test that all expected UI elements are present and visible on the login page."""
-        login_page = LoginPage(page)
-        login_page.navigate()
         login_page.assert_oauth_buttons_visible()
 
 
 class TestLoginPasswordPage:
     """Test cases for validating the login UI state on Password page."""
 
-    def test_password_input_visible(self, page: Page) -> None:
+    def test_password_input_visible(self, login_page, password_page) -> None:
         """Test that the password input is visible on the password
         page after entering a valid email.
         """
-        login_page = LoginPage(page)
-        login_page.navigate()
         login_page.login_with_email(settings.VALID_EMAIL)
-        password_page = LoginPasswordPage(page)
         password_page.wait_for_password_step()
         expect(password_page.password_input).to_be_visible()
         expect(password_page.email_input).to_have_value(settings.VALID_EMAIL)
 
-    def test_continue_button_visible(self, page: Page) -> None:
+    def test_continue_button_visible(self, login_page, password_page) -> None:
         """Test that the continue button is visible on the password page."""
-        login_page = LoginPage(page)
-        login_page.navigate()
         login_page.login_with_email(settings.VALID_EMAIL)
-        password_page = LoginPasswordPage(page)
         password_page.wait_for_password_step()
         expect(password_page.continue_button).to_be_visible()
 
-    def test_password_input_masked_by_default(self, page: Page) -> None:
+    def test_password_input_masked_by_default(self, login_page, password_page) -> None:
         """Test that the password input is masked by default on the password page."""
-        login_page = LoginPage(page)
-        login_page.navigate()
         login_page.login_with_email(settings.VALID_EMAIL)
-        password_page = LoginPasswordPage(page)
         password_page.wait_for_password_step()
         expect(password_page.password_input).to_have_attribute("type", "password")
 
-    def test_show_hide_password_toggle(self, page: Page) -> None:
+    def test_show_hide_password_toggle(self, login_page, password_page) -> None:
         """Test the show/hide password functionality on the password step."""
-
-        login_page = LoginPage(page)
-        login_page.navigate()
         login_page.login_with_email(settings.VALID_EMAIL)
-
-        password_page = LoginPasswordPage(page)
         password_page.wait_for_password_step()
 
         # Verify that the password input is of type "password" by default
@@ -90,42 +71,33 @@ class TestLoginPasswordPage:
         password_page.click_hide_password()
         expect(password_page.password_input).to_have_attribute("type", "password")
 
-    def test_forgot_password_links_visible(self, page: Page) -> None:
+    def test_forgot_password_links_visible(self, login_page, password_page) -> None:
         """Test that the forgot password link are visible on the password page."""
-        login_page = LoginPage(page)
-        login_page.navigate()
         login_page.login_with_email(settings.VALID_EMAIL)
-        password_page = LoginPasswordPage(page)
+        password_page.wait_for_password_step()
         password_page.wait_for_password_step()
         expect(password_page.forgot_password_link).to_be_visible()
 
-    def test_edit_email_link_visible(self, page: Page) -> None:
+    def test_edit_email_link_visible(self, login_page, password_page) -> None:
         """Test that the edit email link is visible on the password page."""
-        login_page = LoginPage(page)
-        login_page.navigate()
         login_page.login_with_email(settings.VALID_EMAIL)
-
-        password_page = LoginPasswordPage(page)
         password_page.wait_for_password_step()
         expect(password_page.edit_email_link).to_be_visible()
 
-    def test_create_account_link_visible(self, page: Page) -> None:
+    def test_create_account_link_visible(self, login_page) -> None:
         """Test that the create account link is visible on the login page."""
-        login_page = LoginPage(page)
-        login_page.navigate()
         expect(login_page.create_account_link).to_be_visible()
 
 
 class TestEditEmailLinkNavigation:
     """Test cases for validating the Edit Email link functionality."""
 
-    def test_edit_email_link_navigates_back_to_email_step(self, page: Page) -> None:
+    def test_edit_email_link_navigates_back_to_email_step(
+        self, login_page, password_page
+    ) -> None:
         """Test that clicking the edit email link navigates back to the email input step."""
-        login_page = LoginPage(page)
-        login_page.navigate()
         login_page.login_with_email(settings.VALID_EMAIL)
 
-        password_page = LoginPasswordPage(page)
         password_page.wait_for_password_step()
         password_page.click_edit_email()
         expect(login_page.email_input).to_be_visible()
@@ -136,10 +108,10 @@ class TestEditEmailLinkNavigation:
 class TestForgotPasswordLinkNavigation:
     """Test cases for validating the Forgot Password link functionality."""
 
-    def test_forgot_password_link_navigates_to_reset_page(self, page: Page) -> None:
+    def test_forgot_password_link_navigates_to_reset_page(
+        self, page: Page, login_page, password_page
+    ) -> None:
         """Test that clicking the forgot password link navigates to the password reset page."""
-        login_page = LoginPage(page)
-        login_page.navigate()
         login_page.login_with_email(settings.VALID_EMAIL)
 
         password_page = LoginPasswordPage(page)
@@ -152,15 +124,14 @@ class TestForgotPasswordLinkNavigation:
         expect(forgot_password_page.reset_password_message).to_be_visible()
         expect(forgot_password_page.email_input).to_have_value(settings.VALID_EMAIL)
 
-    def test_go_back_button_navigates_back_to_password_step(self, page: Page) -> None:
+    def test_go_back_button_navigates_back_to_password_step(
+        self, page: Page, login_page, password_page
+    ) -> None:
         """Test that clicking the go back button on the forgot
         password page navigates back to the password step.
         """
-        login_page = LoginPage(page)
-        login_page.navigate()
         login_page.login_with_email(settings.VALID_EMAIL)
 
-        password_page = LoginPasswordPage(page)
         password_page.wait_for_password_step()
         password_page.click_forgot_password()
 
@@ -173,11 +144,9 @@ class TestCreateAccountLinkNavigation:
     """Test cases for validating the Create Account link functionality."""
 
     def test_create_account_link_navigates_to_create_account_page(
-        self, page: Page
+        self, page: Page, login_page
     ) -> None:
         """Test that clicking the create account link navigates to the create account page."""
-        login_page = LoginPage(page)
-        login_page.navigate()
         login_page.create_account_link.click()
 
         create_account_page = CreateAccountPage(page)
