@@ -1,7 +1,5 @@
 """Page object for the create account page."""
 
-import email
-
 from playwright.sync_api import Page, expect
 
 
@@ -23,14 +21,14 @@ class CreateAccountPage:
         self.facebook_button = page.get_by_role("button", name="Continue with Facebook")
         self.apple_button = page.get_by_role("button", name="Continue with Apple")
 
-    def enter_name(self, first_name: str, last_name: str) -> None:
+    def enter_name(self, first_name: str, last_name: str, email_address: str) -> None:
         """Enter the first and last name into the input fields."""
         self.first_name_input.clear()
         self.first_name_input.fill(first_name)
         self.last_name_input.clear()
         self.last_name_input.fill(last_name)
         self.email_input.clear()
-        self.email_input.fill(email)
+        self.email_input.fill(email_address)
 
     def click_continue(self) -> None:
         """Click the continue button to proceed with account creation."""
