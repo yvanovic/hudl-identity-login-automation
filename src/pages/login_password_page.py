@@ -13,6 +13,7 @@ class LoginPasswordPage:
         # Locators
         self.page = page
         self.password_input = page.get_by_role("textbox", name="Password")
+        self.email_input = page.get_by_role("textbox", name="Email", exact=True)
         self.continue_button = page.get_by_role("button", name="Continue", exact=True)
         self.forgot_password_link = page.get_by_role("link", name="Forgot Password?")
         self.edit_email_link = page.get_by_role("link", name="Edit Email")
