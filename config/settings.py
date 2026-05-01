@@ -22,11 +22,10 @@ class Settings:
     VALID_PASSWORD = os.getenv("VALID_PASSWORD")
 
     # Negative test values
-    INVALID_EMAIL: str = os.getenv("INVALID_EMAIL", "notauser_xyz@example.com")
+    UNREGISTERED_EMAIL: str = os.getenv("INVALID_EMAIL", "notauser_xyz@example.com")
     INVALID_PASSWORD: str = os.getenv("INVALID_PASSWORD", "wrongpassword123")
-    MALFORMED_EMAIL: str = os.getenv("MALFORMED_EMAIL", "notanemail")
+    MALFORMED_EMAIL: str = os.getenv("MALFORMED_EMAIL", "notanemail@gmail.")
     EMPTY_STRING: str = ""
-
 
 
 settings = Settings()

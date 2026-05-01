@@ -33,3 +33,11 @@ class TestValidLogin:
         assert (
             home_page.is_home_page()
         ), "User should be navigated to the home page after successful login."
+
+    def test_valid_email_advances_password_page(self, page: Page) -> None:
+        """Test valid email submission advances to password page."""
+        login_page = LoginPage(page)
+        login_page.navigate()
+        login_page.login_with_email(settings.VALID_EMAIL)
+        password_page = LoginPasswordPage(page)
+        password_page.wait_for_password_step()
