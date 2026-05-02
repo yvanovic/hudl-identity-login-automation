@@ -27,5 +27,8 @@ class Settings:
     MALFORMED_EMAIL: str = os.getenv("MALFORMED_EMAIL", "notanemail@gmail.")
     EMPTY_STRING: str = ""
 
+    # Playwright
+    DEFAULT_TIMEOUT: int = int(os.getenv("DEFAULT_TIMEOUT", "15000"))
+
 
 settings = Settings()

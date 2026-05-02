@@ -28,21 +28,21 @@ class TestInvalidEmailsRejections:
         login_page.login_with_email(settings.MALFORMED_EMAIL)
         login_page.assert_invalid_email_error()
 
-    def test_unregistered_email(self, login_page, password_page) -> None:
+    def test_unregistered_email(self, login_page, login_password_page) -> None:
         """Test that submitting an unregistered email shows the appropriate
         error message.
         """
         login_page.login_with_email(settings.UNREGISTERED_EMAIL)
-        password_page.wait_for_password_step()
-        password_page.enter_password(settings.INVALID_PASSWORD)
-        password_page.click_continue()
-        password_page.assert_incorrect_email_password()
+        login_password_page.wait_for_password_step()
+        login_password_page.enter_password(settings.INVALID_PASSWORD)
+        login_password_page.click_continue()
+        login_password_page.assert_incorrect_email_password()
 
-    def test_incorrect_password(self, login_page, password_page) -> None:
+    def test_incorrect_password(self, login_page, login_password_page) -> None:
         """Test that submitting an incorrect password shows the appropriate
         error message.
         """
         login_page.login_with_email(settings.VALID_EMAIL)
-        password_page.wait_for_password_step()
-        password_page.login_with_password(settings.INVALID_PASSWORD)
-        password_page.assert_incorrect_password()
+        login_password_page.wait_for_password_step()
+        login_password_page.login_with_password(settings.INVALID_PASSWORD)
+        login_password_page.assert_incorrect_password()
