@@ -46,3 +46,10 @@ class TestInvalidEmailsRejections:
         login_password_page.wait_for_password_step()
         login_password_page.login_with_password(settings.INVALID_PASSWORD)
         login_password_page.assert_incorrect_password()
+
+    def test_empty_password(self, login_page, login_password_page) -> None:
+        """Test that submitting an empty password shows the appropriate error message."""
+        login_page.login_with_email(settings.VALID_EMAIL)
+        login_password_page.wait_for_password_step()
+        login_password_page.login_with_password(settings.EMPTY_STRING)
+        login_password_page.assert_empty_password_error()

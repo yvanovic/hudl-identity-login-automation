@@ -55,3 +55,11 @@ class LoginPage:
         expect(self.google_button).to_be_visible()
         expect(self.facebook_button).to_be_visible()
         expect(self.apple_button).to_be_visible()
+
+    def wait_for_email_login_step(self) -> None:
+        """Wait for the password input to be visible."""
+        self.email_input.wait_for(state="visible")
+
+    def click_create_account_link(self) -> None:
+        """Click the create account link button."""
+        self.create_account_link.click()

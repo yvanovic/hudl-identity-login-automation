@@ -20,6 +20,7 @@ class CreateAccountPage:
         self.google_button = page.get_by_role("button", name="Continue with Google")
         self.facebook_button = page.get_by_role("button", name="Continue with Facebook")
         self.apple_button = page.get_by_role("button", name="Continue with Apple")
+        self.login_button = page.get_by_role("link", name="Log In")
 
     def enter_name(self, first_name: str, last_name: str, email_address: str) -> None:
         """Enter the first and last name into the input fields."""
@@ -59,3 +60,7 @@ class CreateAccountPage:
         expect(self.google_button).to_be_visible()
         expect(self.facebook_button).to_be_visible()
         expect(self.apple_button).to_be_visible()
+
+    def click_login(self) -> None:
+        """Click the continue button to proceed with account creation."""
+        self.login_button.click()

@@ -25,6 +25,7 @@ class LoginPasswordPage:
         self.error_message_incorrect_email_password = page.get_by_text(
             "Incorrect username or password."
         )
+        self.empty_password_error = page.get_by_text("Please enter your password")
 
     def enter_password(self, password: str) -> None:
         """Enter the password into the input field."""
@@ -77,3 +78,7 @@ class LoginPasswordPage:
     def wait_for_password_step(self) -> None:
         """Wait for the password input to be visible."""
         self.password_input.wait_for(state="visible")
+
+    def assert_empty_password_error(self) -> None:
+        """Assert that an error message is shown when an empty password"""
+        expect(self.empty_password_error).to_be_visible()
