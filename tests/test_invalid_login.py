@@ -6,12 +6,15 @@ malformed email, empty fields, whitespace.
 None of these tests require a real valid account.
 """
 
+import pytest
+
 from config.settings import settings
 
 
 class TestInvalidEmailsRejections:
     """Errors rejected by invalid emails at the step 1"""
 
+    @pytest.mark.smoke
     def test_empty_email_shows_errors(self, login_page) -> None:
         """
         Test that submitting an empty email shows the appropriate
@@ -38,6 +41,7 @@ class TestInvalidEmailsRejections:
         login_password_page.click_continue()
         login_password_page.assert_incorrect_email_password()
 
+    @pytest.mark.smoke
     def test_incorrect_password(self, login_page, login_password_page) -> None:
         """Test that submitting an incorrect password shows the appropriate
         error message.
@@ -47,6 +51,7 @@ class TestInvalidEmailsRejections:
         login_password_page.login_with_password(settings.INVALID_PASSWORD)
         login_password_page.assert_incorrect_password()
 
+    @pytest.mark.smoke
     def test_empty_password(self, login_page, login_password_page) -> None:
         """Test that submitting an empty password shows the appropriate error message."""
         login_page.login_with_email(settings.VALID_EMAIL)

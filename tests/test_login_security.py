@@ -1,8 +1,7 @@
 """
 Test suite: Security-focused login tests
 ==========================================
-Validates that both login steps handle injection payloads safely,
-and that session boundaries are enforced correctly.
+Validates that both login steps handle injection payloads safely.
 """
 
 import pytest

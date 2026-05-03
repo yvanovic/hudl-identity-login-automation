@@ -14,7 +14,7 @@ class Settings:
     """Configuration settings for the test suite."""
 
     # Application
-    BASE_URL = os.getenv("BASE_URL")
+    BASE_URL = os.getenv("BASE_URL", "https://www.hudl.com")
     LOGIN_URL = BASE_URL + "/login"
 
     # Hudl test credentials
