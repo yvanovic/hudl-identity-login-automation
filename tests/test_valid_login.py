@@ -9,6 +9,7 @@ Requires a valid email and password to be set in the test configuration.
 
 import re
 
+import pytest
 from playwright.sync_api import Page, expect
 
 from config.settings import settings
@@ -17,6 +18,7 @@ from config.settings import settings
 class TestValidLogin:
     """Test cases for valid login functionality."""
 
+    @pytest.mark.smoke
     def test_valid_login(
         self, page: Page, login_page, login_password_page, home_page
     ) -> None:
@@ -35,6 +37,7 @@ class TestValidLogin:
         login_page.login_with_email(settings.VALID_EMAIL)
         login_password_page.wait_for_password_step()
 
+    @pytest.mark.smoke
     def test_valid_login_from_account_page(
         self, login_page, login_password_page, create_account_page, home_page
     ) -> None:
@@ -52,6 +55,7 @@ class TestValidLogin:
 
         home_page.wait_load_state()
 
+    @pytest.mark.smoke
     def test_valid_email_case_insensitive(
         self, login_page, login_password_page, home_page
     ) -> None:
