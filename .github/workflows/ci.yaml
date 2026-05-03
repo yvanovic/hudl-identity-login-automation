@@ -6,8 +6,8 @@ on:
   pull_request:
     branches: [main] # Run on PRs targeting main branch
 
-#  schedule:
-#    - cron: "0 5 * * 4" # Run every Thursday at 5:00 AM UTC
+  schedule:
+    - cron: "0 5 * * 4" # Run every Thursday at 5:00 AM UTC
   workflow_dispatch: #
     inputs:
       marker:
