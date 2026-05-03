@@ -40,7 +40,7 @@ jobs:
           VALID_PASSWORD: ${{ secrets.VALID_PASSWORD }}
         run: |
           pytest \
-          --browser=${{ matrix.browser }}
+          --browser=${{ matrix.browser }} \
           ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && '-m "smoke"' || github.event.inputs.marker && format('-m "{0}"', github.event.inputs.marker) || '' }} \
           --html=reports/report-${{ matrix.browser }}.html \
           --self-contained-html
