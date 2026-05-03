@@ -6,8 +6,8 @@ on:
   pull_request:
     branches: [main] # Run on PRs targeting main branch
 
-  schedule:
-    - cron: "0 1 * * *" # Run every day at 2:00 AM UTC
+#  schedule:
+#    - cron: "0 5 * * 4" # Run every Thursday at 5:00 AM UTC
   workflow_dispatch: #
     inputs:
       marker:
@@ -33,14 +33,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Install Playwright browsers
-        run: playwright install --with-deps ${{ matrix.browser }}
+        run: playwright install --with-deps
       - name: Run test suite
         env:
           VALID_EMAIL: ${{ secrets.VALID_EMAIL }}
           VALID_PASSWORD: ${{ secrets.VALID_PASSWORD }}
         run: |
           pytest \
-          ${{ github.event.inputs.marker && format('-m "{0}"', github.event.inputs.marker) || '' }} \
+          --browser=${{ matrix.browser }}
+          ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && '-m "smoke"' || github.event.inputs.marker && format('-m "{0}"', github.event.inputs.marker) || '' }} \
           --html=reports/report-${{ matrix.browser }}.html \
           --self-contained-html
       - name: Upload report
