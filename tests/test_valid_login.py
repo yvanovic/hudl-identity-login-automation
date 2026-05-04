@@ -10,7 +10,7 @@ Requires a valid email and password to be set in the test configuration.
 import re
 
 import pytest
-from playwright.sync_api import Page, expect
+from playwright.sync_api import expect
 
 from config.settings import settings
 
@@ -19,9 +19,7 @@ class TestValidLogin:
     """Test cases for valid login functionality."""
 
     @pytest.mark.smoke
-    def test_valid_login(
-        self, page: Page, login_page, login_password_page, home_page
-    ) -> None:
+    def test_valid_login(self, login_page, login_password_page, home_page) -> None:
         """Test the full login flow with valid credentials."""
         login_page.login_with_email(settings.VALID_EMAIL)
         login_password_page.wait_for_password_step()

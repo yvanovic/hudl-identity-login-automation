@@ -11,7 +11,7 @@ on:
   workflow_dispatch: #
     inputs:
       marker:
-        description: "pytest marker: smoke | security | ui"
+        description: "pytest marker: smoke | security | ui |  negative"
         required: false
         default: ""
 

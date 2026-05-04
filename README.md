@@ -10,6 +10,7 @@ A **production-ready Playwright/Python test automation framework** for the Hudl 
 - [Architecture Overview](#architecture-overview)
 - [Test Coverage](#test-coverage)
 - [Quick Start](#quick-start)
+- [Mobile Device Testing](#mobile-device-testing)
 - [CI/CD](#cicd)
 - [Browser Compatibility](#browser-compatibility)
 - [Code Quality](#code-quality)
@@ -79,21 +80,24 @@ When a test fails, `pytest_runtest_makereport` hook in `conftest.py` automatical
 
 | Marker     | Purpose                         | Run when                              |
 | ---------- | ------------------------------- | ------------------------------------- |
-| `smoke`    | Critical-path, must always pass | Push, Pull-request, On Manual trigger |
+| `smoke`    | Critical-path, must always pass | On manual trigger, Push, Pull-request |
 | `security` | SQL Injection, XSS payload      | On manual trigger                     |
-| `ui`       | Visual/interaction state        | On Manual trigger                     |
+| `ui`       | Visual/interaction state        | On manual trigger                     |
+| `mobile`   | Responsive device testing       | On manual trigger                     |
+| `negative` | Error-path scenarios            | On manual trigger                     |
 
 ### Test Modules
 
-| Module                        | Scenarios                                                                            | Markers               |
-| ----------------------------- | ------------------------------------------------------------------------------------ | --------------------- |
-| `test_valid_login.py`         | Valid credentials, email advancement, full login flow, password step transition      | `smoke`, `regression` |
-| `test_invalid_login.py`       | Invalid email, missing email, unregistered email, wrong password, error handling     | `smoke`               |
-| `test_login_security.py`      | XSS payload injection, SQL injection attempts, malformed inputs, security edge cases | `security`            |
-| `test_login_ui.py`            | OAuth buttons visibility, form layout, button states, input validation messages      | `ui`                  |
-| `test_login_accessibility.py` | ARIA labels, keyboard navigation, screen reader compatibility, contrast ratios       | `regression`          |
+| Module                        | Scenarios                                                                                | Markers               |
+| ----------------------------- | ---------------------------------------------------------------------------------------- | --------------------- |
+| `test_valid_login.py`         | Valid credentials, email advancement, full login flow, password step transition          | `smoke`, `regression` |
+| `test_invalid_login.py`       | Invalid email, missing email, unregistered email, wrong password, error handling         | `smoke`               |
+| `test_login_security.py`      | XSS payload injection, SQL injection attempts, malformed inputs, security edge cases     | `security`            |
+| `test_login_ui.py`            | OAuth buttons visibility, form layout, button states, input validation messages          | `ui`                  |
+| `test_login_accessibility.py` | ARIA labels, keyboard navigation, screen reader compatibility, contrast ratios           | `regression`          |
+| `test_login_mobile.py`        | Valid login, invalid email, empty email, OAuth on iPhone 15 Pro, iPad Pro 11, Galaxy S24 | `mobile`              |
 
-**~31 test cases** total.
+**~34 test cases** total.
 
 ---
 
@@ -193,6 +197,12 @@ All configuration is driven by environment variables loaded from `.env` file:
    HEADLESS=false pytest -m smoke
    pytest --headed -m smoke
 
+   # Mobile device testing
+   # This runs 12 test combinations: 4 tests × 3 devices = 12 total.
+   pytest -m mobile         # All mobile tests across devices
+   pytest -m mobile -v      # Mobile tests with verbose output
+   HEADLESS=false pytest -m mobile # View mobile emulator (headed mode)
+
    # Single test file
    pytest tests/test_valid_login.py
 
@@ -212,6 +222,18 @@ All configuration is driven by environment variables loaded from `.env` file:
    # Verbose output with timing
    pytest -v --tb=short
    ```
+
+---
+
+## Mobile Device Testing
+
+This project includes responsive device testing using Playwright's device emulation. Tests run across **thre devices** with accurate viewport sizes. For now these tests run on headless mode and on chromium as defined in the fixtures `mobile_page`.
+
+**Supported Emulated Devices:**
+
+- iPhone 15 Pro (Mobile)
+- iPad Pro 11 (Tablet)
+- Galaxy S24 (Android)
 
 ---
 

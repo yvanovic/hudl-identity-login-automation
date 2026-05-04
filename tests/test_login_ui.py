@@ -10,7 +10,7 @@ Validates the visual and interactive state of both login form steps:
 import re
 
 import pytest
-from playwright.sync_api import Page, expect
+from playwright.sync_api import expect
 
 from config.settings import settings
 
@@ -122,7 +122,7 @@ class TestForgotPasswordLinkNavigation:
 
     @pytest.mark.ui
     def test_forgot_password_link_navigates_to_reset_page(
-        self, page: Page, login_page, login_password_page, forgot_password_page
+        self, login_page, login_password_page, forgot_password_page
     ) -> None:
         """Test that clicking the forgot password link navigates to the password reset page."""
         login_page.login_with_email(settings.VALID_EMAIL)
@@ -137,7 +137,7 @@ class TestForgotPasswordLinkNavigation:
 
     @pytest.mark.ui
     def test_go_back_button_navigates_back_to_password_step(
-        self, page: Page, login_page, login_password_page, forgot_password_page
+        self, login_page, login_password_page, forgot_password_page
     ) -> None:
         """Test that clicking the go back button on the forgot
         password page navigates back to the password step.
