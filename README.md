@@ -4,6 +4,30 @@ A **production-ready Playwright/Python test automation framework** for the Hudl 
 
 ---
 
+## Table of Contents
+
+- [Known Issues](#known-issues)
+- [Architecture Overview](#architecture-overview)
+- [Test Coverage](#test-coverage)
+- [Quick Start](#quick-start)
+- [CI/CD](#cicd)
+- [Browser Compatibility](#browser-compatibility)
+- [Code Quality](#code-quality)
+- [Reports](#reports)
+- [Additional Resources](#additional-resources)
+
+---
+
+## Known Issues
+
+See **[KNOWN_ISSUES.md](./KNOWN_ISSUES.md)** for:
+
+- Failing tests and root causes
+- Browser-specific limitations
+- Assumptions about test environment
+
+---
+
 **Key design choices:**
 
 - **`Page` injected directly** — `LoginPage(page: Page)`. No base class, no inheritance chain, no hidden behavior.
@@ -24,7 +48,7 @@ This project follows a **lightweight Page Object Model (POM)** without inheritan
 login_page = LoginPage(page)
 
 # Pages expose locators as properties
-login_page.email_input  # Locator
+login_page.email_input  # Locatorpy
 login_page.continue_button  # Locator
 
 # Pages provide action methods
@@ -48,6 +72,7 @@ login_page.assert_invalid_email_error()
 When a test fails, `pytest_runtest_makereport` hook in `conftest.py` automatically captures a screenshot to `reports/screenshots/{test_name}.png`.
 
 ---
+
 ## Test Coverage
 
 ### Markers
@@ -60,24 +85,15 @@ When a test fails, `pytest_runtest_makereport` hook in `conftest.py` automatical
 
 ### Test Modules
 
-| Module | Scenarios | Markers |
-|---|---|---|
-| `test_valid_login.py` | Valid credentials, email advancement, full login flow, password step transition | `smoke`, `regression` |
-| `test_invalid_login.py` | Invalid email, missing email, unregistered email, wrong password, error handling | `smoke` |
-| `test_login_security.py` | XSS payload injection, SQL injection attempts, malformed inputs, security edge cases | `security` |
-| `test_login_ui.py` | OAuth buttons visibility, form layout, button states, input validation messages | `ui` |
-| `test_login_accessibilty.py` | ARIA labels, keyboard navigation, screen reader compatibility, contrast ratios | `regression` |
+| Module                        | Scenarios                                                                            | Markers               |
+| ----------------------------- | ------------------------------------------------------------------------------------ | --------------------- |
+| `test_valid_login.py`         | Valid credentials, email advancement, full login flow, password step transition      | `smoke`, `regression` |
+| `test_invalid_login.py`       | Invalid email, missing email, unregistered email, wrong password, error handling     | `smoke`               |
+| `test_login_security.py`      | XSS payload injection, SQL injection attempts, malformed inputs, security edge cases | `security`            |
+| `test_login_ui.py`            | OAuth buttons visibility, form layout, button states, input validation messages      | `ui`                  |
+| `test_login_accessibility.py` | ARIA labels, keyboard navigation, screen reader compatibility, contrast ratios       | `regression`          |
 
 **~31 test cases** total.
-
----
-## Prerequisites
-
-| Tool   | Minimum version                |
-| ------ | ------------------------------ |
-| Python | 3.11                           |
-| pip    | 23+ (bundled with Python 3.11) |
-| Git    | Any recent version             |
 
 ---
 
@@ -100,6 +116,16 @@ All configuration is driven by environment variables loaded from `.env` file:
 
 ---
 
+## Prerequisites
+
+| Tool   | Minimum version                |
+| ------ | ------------------------------ |
+| Python | 3.11                           |
+| pip    | 23+ (bundled with Python 3.11) |
+| Git    | Any recent version             |
+
+---
+
 ## Quick Start
 
 1. **Clone the repository:**
@@ -119,15 +145,26 @@ All configuration is driven by environment variables loaded from `.env` file:
 3. **Install dependencies:**
 
    ```bash
-   pip install -r requirements.txt
+    pip install -r requirements.txt
+
+   # Installing Playwright browser
+    playwright install --with-deps
    ```
 
-4. **Configure credentials:**
+4. **Install pre-commit into this repo's git hooks**
+   ```bash
+   # downloads all the tools listed in .pre-commit-config.yaml upfront
+   pre-commit install --install-hooks
+   ```
+5. **Configure credentials:**
    - Copy `.env.example` to `.env`
    - Edit `.env` and add your credentials:
+   - **Never commit `.env`** — it contains secrets
+   - Add `.env` to `.gitignore` (already configured)
+   - `.env` is loaded automatically by `config/settings.py`
      - `VALID_EMAIL`: Your valid email to use
      - `VALID_PASSWORD`: Your valid password
-     - `BASE_URL`:
+     - `BASE_URL`: The base url target for this test suite
 
    ```bash
    cp .env.example .env
@@ -137,7 +174,7 @@ All configuration is driven by environment variables loaded from `.env` file:
    export $(cat .env | xargs)
    ```
 
-5. **Run the test :**
+6. **Run the tests :**
 
    ```bash
    # Full suite (all tests, chromium browser)
@@ -178,10 +215,6 @@ All configuration is driven by environment variables loaded from `.env` file:
 
 ---
 
-## Project Structure
-
----
-
 ## CI/CD
 
 `.github/workflows/ci.yaml` runs on every push and pull request:
@@ -207,12 +240,14 @@ From the GitHub Actions UI, trigger `workflow_dispatch` with a `marker` input:
 
 ---
 
-### CI secrets
+### GitHub Secrets (for CI)
 
-| Secret           | Purpose                                    |
-| ---------------- | ------------------------------------------ |
-| `VALID_EMAIL`    | Override if the demo password changes      |
-| `VALID_PASSWORD` | Override to point at a staging environment |
+| Secret           | Purpose                                                          |
+| ---------------- | ---------------------------------------------------------------- |
+| `VALID_EMAIL`    | The test account email. Override if the demo password changes    |
+| `VALID_PASSWORD` | The test account password. Override if the demo password changes |
+
+Secrets are stored in GitHub repo settings and injected at runtime. These are **not visible** in workflow logs or artifacts.
 
 ---
 
@@ -254,7 +289,6 @@ Config lives in `setup.cfg` (`[flake8]` and `[isort]` sections). Line length is 
 Runs automatically on `git commit`:
 
 ```bash
-pre-commit install          # only needed once
 pre-commit run --all-files  # run manually against everything
 ```
 
@@ -282,26 +316,6 @@ open reports/report.html
 **Failure screenshots** are saved automatically to `reports/screenshots/{test_name}.png` via the `pytest_runtest_makereport` hook in `conftest.py`. When a test fails, the screenshot is embedded in the HTML report.
 
 **CI artifacts:** GitHub Actions uploads reports as artifacts (2-day retention) for easy inspection.
-
----
-
-## Test Data & Credentials Security
-
-### `.env` file
-
-- **Never commit `.env`** — it contains secrets
-- Always copy from `.env.example`
-- Add `.env` to `.gitignore` (already configured)
-- `.env` is loaded automatically by `config/settings.py`
-
-### GitHub Secrets (for CI/CD)
-
-Secrets are stored in GitHub repo settings and injected at runtime:
-
-- `VALID_EMAIL` — test account email
-- `VALID_PASSWORD` — test account password
-
-These are **not visible** in workflow logs or artifacts.
 
 ---
 
