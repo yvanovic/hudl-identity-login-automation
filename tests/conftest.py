@@ -7,8 +7,10 @@ Login_email_page          LoginEmailPage — step 1, URL already open     (funct
 
 """
 
+import os
+
 import pytest
-from playwright.sync_api import Page
+from playwright.sync_api import Page, Playwright
 
 from config.settings import settings
 from src.pages.create_account_page import CreateAccountPage
@@ -71,3 +73,34 @@ def pytest_runtest_makereport(item, call):
         if page:
             screenshot_path = f"reports/screenshots/{item.name}.png"
             page.screenshot(path=screenshot_path, full_page=True)
+
+
+# ---------------------------------------------------------------------------
+# Device configurations for testing
+# ---------------------------------------------------------------------------
+DEVICES = [
+    "iPhone 15 Pro",  # Mobile: 390x844
+    "iPad Pro 11",  # Tablet: 1024x1366
+    "Galaxy S24",  # Android: 360x800
+]
+
+
+@pytest.fixture(params=DEVICES)
+def mobile_page(playwright: Playwright, request) -> Page:
+    """Fixture to run tests across multiple device emulations."""
+
+    device_name = request.param
+    device_config = playwright.devices[device_name]
+
+    headless = os.getenv("HEADLESS", "true").lower() != "false"
+
+    browser = playwright.chromium.launch(
+        headless=headless,
+    )
+    context = browser.new_context(**device_config)
+    page = context.new_page()
+
+    yield page
+
+    context.close()
+    browser.close()
