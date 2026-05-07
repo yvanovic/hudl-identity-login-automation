@@ -41,6 +41,7 @@ jobs:
         run: |
           pytest \
           --browser=${{ matrix.browser }} \
+          # Conditionally add marker if it's a push or pull_request event, or if the marker input is provided th
           ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && '-m "smoke"' || github.event.inputs.marker && format('-m "{0}"', github.event.inputs.marker) || '' }} \
           --html=reports/report-${{ matrix.browser }}.html \
           --self-contained-html

@@ -7,7 +7,10 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+# load .env file if it exists, but don't override existing environment variables
+# The .env file is expected to be in the project root, hence the use of parent.parent
 load_dotenv(Path(__file__).resolve().parent.parent / ".env", override=False)
+# override=False ensures that if an environment variable is already set (e.g. via CI secrets), it won't be overwritten by the .env file
 
 
 class Settings:
@@ -31,4 +34,5 @@ class Settings:
     DEFAULT_TIMEOUT: int = int(os.getenv("DEFAULT_TIMEOUT", "15000"))
 
 
+# Instantiate settings to be used across the test suite
 settings = Settings()

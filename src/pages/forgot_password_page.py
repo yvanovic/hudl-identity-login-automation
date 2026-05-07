@@ -1,6 +1,6 @@
 """Page object for the forgot password page."""
 
-from playwright.sync_api import Page
+from playwright.sync_api import Page, expect
 
 
 class ForgotPasswordPage:
@@ -17,6 +17,10 @@ class ForgotPasswordPage:
             "We'll send you a link to reset your password."
         )
 
+    # ------------------------------------------------------------------
+    # Actions
+    # ------------------------------------------------------------------
+
     def enter_email(self, email: str) -> None:
         """Enter the email into the input field."""
         self.email_input.clear()
@@ -29,3 +33,7 @@ class ForgotPasswordPage:
     def click_go_back(self) -> None:
         """Click the go back button to navigate back to the previous page."""
         self.go_back_button.click()
+
+    def assert_go_back_navigates_back(self) -> None:
+        """Assert that go back button is present."""
+        expect(self.go_back_button).to_be_visible()

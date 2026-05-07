@@ -42,4 +42,4 @@ class TestKeyboardNavigationEmailStep:
         login_password_page.page.keyboard.press("Enter")
 
         home_page.wait_load_state()
-        expect(home_page.page).to_have_url(re.compile(".*/home"))
+        expect(home_page.page).to_have_url(re.compile("https://fan.hudl.com"))

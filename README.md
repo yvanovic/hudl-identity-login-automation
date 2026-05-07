@@ -97,7 +97,7 @@ When a test fails, `pytest_runtest_makereport` hook in `conftest.py` automatical
 | `test_login_accessibility.py` | ARIA labels, keyboard navigation, screen reader compatibility, contrast ratios           | `regression`          |
 | `test_login_mobile.py`        | Valid login, invalid email, empty email, OAuth on iPhone 15 Pro, iPad Pro 11, Galaxy S24 | `mobile`              |
 
-**~34 test cases** total.
+**~43 test cases** total.
 
 ---
 

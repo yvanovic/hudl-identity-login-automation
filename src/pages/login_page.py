@@ -25,6 +25,8 @@ class LoginPage:
 
     def navigate(self) -> None:
         """Navigate to the login page."""
+        # domcontentloaded is used to ensure the page is
+        # interactive before we start interacting with it,
         self.page.goto(self.URL, wait_until="domcontentloaded")
         self.email_input.wait_for(state="visible")
 

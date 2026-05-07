@@ -22,6 +22,9 @@ class CreateAccountPage:
         self.apple_button = page.get_by_role("button", name="Continue with Apple")
         self.login_button = page.get_by_role("link", name="Log In")
 
+    # ------------------------------------------------------------------
+    # Actions
+    # ------------------------------------------------------------------
     def enter_name(self, first_name: str, last_name: str, email_address: str) -> None:
         """Enter the first and last name into the input fields."""
         self.first_name_input.clear()
@@ -34,6 +37,10 @@ class CreateAccountPage:
     def click_continue(self) -> None:
         """Click the continue button to proceed with account creation."""
         self.continue_button.click()
+
+    # ------------------------------------------------------------------
+    # State
+    # ------------------------------------------------------------------
 
     def assert_first_name_required(self) -> None:
         """Assert that an error message is shown when first name is not provided."""

@@ -26,7 +26,8 @@ class TestValidLogin:
         login_password_page.login_with_password(settings.VALID_PASSWORD)
 
         home_page.wait_load_state()
-        expect(home_page.page).to_have_url(re.compile(".*/home"))
+        home_page.assert_search_input_visible()
+        expect(home_page.page).to_have_url(re.compile("https://fan.hudl.com"))
 
     def test_valid_email_advances_password_page(
         self, login_page, login_password_page
@@ -63,4 +64,4 @@ class TestValidLogin:
         login_password_page.login_with_password(settings.VALID_PASSWORD)
 
         home_page.wait_load_state()
-        expect(home_page.page).to_have_url(re.compile(".*/home"))
+        expect(home_page.page).to_have_url(re.compile("https://fan.hudl.com"))
