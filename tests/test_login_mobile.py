@@ -38,45 +38,51 @@ class TestMobileLoginFlow:
 
         # Verify successful login
         home_page.wait_load_state()
-        expect(home_page.page).to_have_url(re.compile(".*/home"))
+        expect(home_page.page).to_have_url(re.compile("https://fan.hudl.com"))
 
-    # @pytest.mark.mobile
-    # def test_invalid_email_on_mobile_device(
-    #     self, mobile_page: Page
-    # ) -> None:
-    #     """Test invalid email error handling on mobile device."""
-    #     page = mobile_page
 
-    #     login_page = LoginPage(page)
+class TestMobileInvalidLoginFlow:
+    """Test invalid login flow on mobile and tablet devices."""
 
-    #     # Attempt login with invalid email
-    #     login_page.navigate()
-    #     login_page.login_with_email(settings.MALFORMED_EMAIL)
+    @pytest.mark.mobile
+    def test_invalid_email_on_mobile_device(self, mobile_page: Page) -> None:
+        """Test invalid email error handling on mobile device."""
+        page = mobile_page
 
-    #     # Verify error message is shown
-    #     expect(login_page.error_message_invalid_email).to_be_visible()
+        login_page = LoginPage(page)
 
-    # @pytest.mark.mobile
-    # def test_empty_email_on_mobile_device(self, mobile_page: Page) -> None:
-    #     """Test empty email error handling on mobile device."""
-    #     page = mobile_page
-    #     login_page = LoginPage(page)
+        # Attempt login with invalid email
+        login_page.navigate()
+        login_page.login_with_email(settings.MALFORMED_EMAIL)
 
-    #     # Attempt login with empty email
-    #     login_page.navigate()
-    #     login_page.login_with_email(settings.EMPTY_STRING)
+        # Verify error message is shown
+        expect(login_page.error_message_invalid_email).to_be_visible()
 
-    #     # Verify error message is shown
-    #     expect(login_page.error_message_empty).to_be_visible()
+    @pytest.mark.mobile
+    def test_empty_email_on_mobile_device(self, mobile_page: Page) -> None:
+        """Test empty email error handling on mobile device."""
+        page = mobile_page
+        login_page = LoginPage(page)
 
-    # @pytest.mark.mobile
-    # def test_oauth_buttons_visible_on_mobile(self, mobile_page: Page) -> None:
-    #     """Test OAuth buttons are visible and accessible on mobile device."""
-    #     page = mobile_page
-    #     login_page = LoginPage(page)
+        # Attempt login with empty email
+        login_page.navigate()
+        login_page.login_with_email(settings.EMPTY_STRING)
 
-    #     # Navigate to login page
-    #     login_page.navigate()
+        # Verify error message is shown
+        expect(login_page.error_message_empty).to_be_visible()
 
-    #     # Verify OAuth buttons are visible on mobile
-    #     login_page.assert_oauth_buttons_visible()
+
+class TestMobileOAuthButtons:
+    """Test that OAuth login buttons are visible and accessible on mobile devices."""
+
+    @pytest.mark.mobile
+    def test_oauth_buttons_visible_on_mobile(self, mobile_page: Page) -> None:
+        """Test OAuth buttons are visible and accessible on mobile device."""
+        page = mobile_page
+        login_page = LoginPage(page)
+
+        # Navigate to login page
+        login_page.navigate()
+
+        # Verify OAuth buttons are visible on mobile
+        login_page.assert_oauth_buttons_visible()

@@ -8,7 +8,7 @@ from config.settings import settings
 class LoginPage:
     """Page Object Model for the Login Page."""
 
-    URL = settings.LOGIN_URL
+    # URL = settings.LOGIN_URL
 
     def __init__(self, page: Page):
         # Locators
@@ -25,12 +25,14 @@ class LoginPage:
 
     def navigate(self) -> None:
         """Navigate to the login page."""
-        self.page.goto(self.URL, wait_until="domcontentloaded")
+        # domcontentloaded is used to ensure the page is
+        # interactive before we start interacting with it,
+        self.page.goto(settings.LOGIN_URL, wait_until="domcontentloaded")
         self.email_input.wait_for(state="visible")
 
     def enter_email(self, email: str) -> None:
         """Enter the email address into the input field."""
-        self.email_input.clear()
+        self.email_input.clear()  #
         self.email_input.fill(email)
 
     def click_continue(self) -> None:

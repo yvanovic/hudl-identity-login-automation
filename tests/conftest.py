@@ -3,8 +3,11 @@ Root conftest — fixtures shared across the entire test suite.
 
 Fixture summary
 ---------------
-Login_email_page          LoginEmailPage — step 1, URL already open     (function)
-
+login_page                LoginPage — step 1, URL already open                         (function)
+login_password_page       LoginPasswordPage — step 2                                   (function)
+home_page                 HomePage — post-login confirmation wrapper                   (function)
+forgot_password_page      ForgotPasswordPage -  Step when click forgot password link   (function)
+create_account_page       CreateAccountPage   - Step when click create account link    (function)
 """
 
 import os
@@ -94,6 +97,8 @@ def mobile_page(playwright: Playwright, request) -> Page:
 
     headless = os.getenv("HEADLESS", "true").lower() != "false"
 
+    # By creating a new browser and context for mobile tests,
+    # the CLI arguments are not applied thus we need to set headless mode explicitly here.
     browser = playwright.chromium.launch(
         headless=headless,
     )
