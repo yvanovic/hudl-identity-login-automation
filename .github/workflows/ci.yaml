@@ -1,10 +1,10 @@
 name: Hudl Login Flow Test Suite
 
 on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main] # Run on PRs targeting main branch
+#  push:
+#    branches: [main, develop]
+#  pull_request:
+#    branches: [main] # Run on PRs targeting main branch
 
 #  schedule:
 #    - cron: "0 5 * * 4" # Run every Thursday at 5:00 AM UTC
